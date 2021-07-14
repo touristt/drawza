@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Sketch from 'react-p5';
 import styled from 'styled-components';
+import { notification } from '../utils/notification';
 import { ColorPalette } from './ColorPalette';
 import { StrokeWeight } from './StrokeWeight';
 import { FiTrash } from 'react-icons/fi';
@@ -80,6 +81,8 @@ export const Canvas = () => {
 	const [eraserOn, setEraserOn] = useState(false);
 	const [strokeWeight, setStrokeWeight] = useState(5);
 	const [toolsVisible, setToolsVisible] = useState(false);
+	const [canDraw, setCanDraw] = useState(false);
+
 	const p5Ref = useRef(null);
 	const canvasRef = useRef(null);
 	const selectBackgroundRef = useRef(null);
@@ -90,10 +93,37 @@ export const Canvas = () => {
 		canvasRef.current.elt.style.cursor = 'crosshair';
 		p5.background(background);
 		p5Ref.current = p5;
+		if (window.innerWidth > 768)
+			notification(
+				'Draw by dragging or Hold key "d" and move the cursor',
+				`press "c" = clear, "p" = pencil "e" : eraser`,
+				'info',
+				8000
+			);
 	};
 
-	const draw = (p5) => {};
-
+	const draw = (p5) => {
+		if (canDraw) mouseDragged(p5);
+	};
+	const keyPressed = (p5) => {
+		if (p5.keyCode === 68) {
+			setCanDraw(true);
+		} else if (p5.keyCode === 67) {
+			updateBackground();
+			notification('', 'Canvas Cleared', 'info');
+		} else if (p5.keyCode === 69) {
+			setEraserOn(true);
+			notification('', 'Eraser On', 'info');
+		} else if (p5.keyCode === 80) {
+			setEraserOn(false);
+			notification('', 'Pencil On', 'info');
+		}
+	};
+	const keyReleased = (p5) => {
+		if (p5.keyCode === 68) {
+			setCanDraw(false);
+		}
+	};
 	const mouseDragged = (p5) => {
 		setToolsVisible(false);
 		if (!eraserOn) {
@@ -210,6 +240,8 @@ export const Canvas = () => {
 					draw={draw}
 					updateBackground={updateBackground}
 					mouseDragged={mouseDragged}
+					keyPressed={keyPressed}
+					keyReleased={keyReleased}
 				/>
 			</div>
 		</CanvasStyles>
