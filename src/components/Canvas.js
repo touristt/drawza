@@ -82,6 +82,7 @@ export const Canvas = () => {
 	const [strokeWeight, setStrokeWeight] = useState(5);
 	const [toolsVisible, setToolsVisible] = useState(false);
 	const [canDraw, setCanDraw] = useState(false);
+	const [overTools, setOverTools] = useState(false);
 
 	const p5Ref = useRef(null);
 	const canvasRef = useRef(null);
@@ -101,9 +102,8 @@ export const Canvas = () => {
 				8000
 			);
 	};
-
 	const draw = (p5) => {
-		if (canDraw) mouseDragged(p5);
+		if (canDraw) drawing(p5);
 	};
 	const keyPressed = (p5) => {
 		if (p5.keyCode === 68) {
@@ -125,6 +125,15 @@ export const Canvas = () => {
 		}
 	};
 	const mouseDragged = (p5) => {
+		setCanDraw(true);
+	};
+	const mouseReleased = (p5) => {
+		setCanDraw(false);
+	};
+	const mousepressed = (p5) => {
+		if (!overTools) setCanDraw(true);
+	};
+	const drawing = (p5) => {
 		setToolsVisible(false);
 		if (!eraserOn) {
 			p5.stroke(stroke);
@@ -150,7 +159,10 @@ export const Canvas = () => {
 		<CanvasStyles>
 			{' '}
 			<div>
-				<div id='tools'>
+				<div
+					id='tools'
+					onMouseEnter={() => setOverTools(true)}
+					onMouseLeave={() => setOverTools(false)}>
 					{toolsVisible ? (
 						<div
 							className='icon'
@@ -240,6 +252,8 @@ export const Canvas = () => {
 					draw={draw}
 					updateBackground={updateBackground}
 					mouseDragged={mouseDragged}
+					mouseReleased={mouseReleased}
+					mousePressed={mousepressed}
 					keyPressed={keyPressed}
 					keyReleased={keyReleased}
 				/>

@@ -8,10 +8,12 @@ const Main = styled.main`
 	.active {
 		border-color: var(--white);
 	}
+	z-index: 1;
 `;
 const ColorRow = styled.div`
 	display: flex;
 	flex-direction: row;
+	z-index: 1;
 `;
 const Color = styled.div`
 	width: 35px;
@@ -21,6 +23,7 @@ const Color = styled.div`
 	border: 3px solid transparent;
 	cursor: pointer;
 	padding: 0.2rem;
+	z-index: 1;
 
 	&:hover {
 		border-color: var(--white);
