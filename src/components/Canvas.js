@@ -77,9 +77,9 @@ const CanvasStyles = styled.main`
 
 export const Canvas = () => {
 	const [background, setBackground] = useState('#333');
-	const [stroke, setStroke] = useState('#f44336');
+	const [stroke, setStroke] = useState('#0099ff');
 	const [eraserOn, setEraserOn] = useState(false);
-	const [strokeWeight, setStrokeWeight] = useState(5);
+	const [strokeWeight, setStrokeWeight] = useState(10);
 	const [toolsVisible, setToolsVisible] = useState(false);
 	const [canDraw, setCanDraw] = useState(false);
 	const [overTools, setOverTools] = useState(false);
@@ -97,9 +97,9 @@ export const Canvas = () => {
 		if (window.innerWidth > 768)
 			notification(
 				'Draw by dragging or Hold key "d" and move the cursor',
-				`press "c" = clear, "p" = pencil "e" : eraser`,
+				`shortcuts: <clear-screen : 'c'> <pencil: 'p'> <eraser: 'e'> <increase-stroke-weight:'+'> <decrease-stroke-weight:'-'>`,
 				'info',
-				8000
+				10000
 			);
 	};
 	const draw = (p5) => {
@@ -117,6 +117,12 @@ export const Canvas = () => {
 		} else if (p5.keyCode === 80) {
 			setEraserOn(false);
 			notification('', 'Pencil On', 'info');
+		} else if (p5.keyCode === 107) {
+			setStrokeWeight(strokeWeight + 5);
+			notification('', '++size: ' + strokeWeight, 'info');
+		} else if (p5.keyCode === 109) {
+			setStrokeWeight(Math.max(1, strokeWeight - 5));
+			notification('', '--size: ' + strokeWeight, 'info');
 		}
 	};
 	const keyReleased = (p5) => {
